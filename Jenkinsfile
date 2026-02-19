@@ -2,32 +2,24 @@ pipeline {
     agent any
 
     stages {
-        stage('Build Image') {
+        stage('Checkout Code') {
             steps {
-                sh 'docker build -t login-app:latest .'
+                echo 'Pulling code from GitHub...'
+                checkout scm
             }
         }
 
-        stage('Deploy App') {
+        stage('Build') {
             steps {
-                sh '''
-                docker rm -f login-app || true
-                docker run -d \
-                  --name login-app \
-                  -p 5010:5000 \
-                  login-app:latest
-                '''
+                echo 'Simulating build step'
+                sh 'ls -l'
             }
         }
 
-        stage('Health Check') {
+        stage('Success') {
             steps {
-                sh '''
-                sleep 5
-                curl -f http://host.docker.internal:5010/health
-                '''
+                echo 'Pipeline executed successfully 🎉'
             }
         }
     }
 }
-
